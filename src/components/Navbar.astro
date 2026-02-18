@@ -20,7 +20,37 @@ let links: NavBarLink[] = navBarConfig.links.map(
 	},
 );
 ---
-<div id="navbar" class="z-50 onload-animation">
+<div id="navbar" class="z-50 onload-animation relative overflow-hidden">
+    <!-- 星空点缀 -->
+    <div class="absolute inset-0 pointer-events-none opacity-60" id="navbar-stars"></div>
+    <script is:inline>
+        (function() {
+            var container = document.getElementById('navbar-stars');
+            if (!container) return;
+
+            for (var i = 0; i < 8; i++) {
+                var star = document.createElement('div');
+                var size = Math.random() * 2 + 1;
+                star.style.position = 'absolute';
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.background = 'white';
+                star.style.borderRadius = '50%';
+                star.style.boxShadow = '0 0 ' + (size * 2) + 'px rgba(255,255,255,0.8)';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animation = 'navbarStarTwinkle ' + (Math.random() * 2 + 2) + 's ease-in-out infinite';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(star);
+            }
+        })();
+    </script>
+    <style is:global>
+        @keyframes navbarStarTwinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+    </style>
     <div class="absolute h-8 left-0 right-0 -top-8 bg-[var(--card-bg)] transition"></div> <!-- used for onload animation -->
     <div class:list={[
         className,

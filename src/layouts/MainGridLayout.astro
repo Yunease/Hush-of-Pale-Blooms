@@ -22,6 +22,7 @@ interface Props {
 	lang?: string;
 	setOGTypeArticle?: boolean;
 	headings?: MarkdownHeading[];
+	easter?: boolean;
 }
 
 const {
@@ -31,6 +32,7 @@ const {
 	lang,
 	setOGTypeArticle,
 	headings = [],
+	easter = false,
 } = Astro.props;
 const hasBannerCredit =
 	siteConfig.banner.enable && siteConfig.banner.credit.enable;
@@ -42,6 +44,455 @@ const mainPanelTop = siteConfig.banner.enable
 ---
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle}>
+{easter ? (
+    <script is:inline>sessionStorage.setItem('easter', 'true');</script>
+) : (
+    <script is:inline>sessionStorage.removeItem('easter');</script>
+)}
+
+<!-- Easter Background -->
+{easter && (
+    <div class="easter-bg">
+        <div class="easter-nebula">
+            <div class="nebula-cloud"></div>
+            <div class="nebula-cloud"></div>
+            <div class="nebula-cloud"></div>
+        </div>
+    </div>
+    <div class="easter-stars" id="easter-stars"></div>
+    <div class="easter-meteors" id="easter-meteors"></div>
+    <div class="easter-comets" id="easter-comets"></div>
+    <div class="easter-cursor-dust" id="easter-cursor-dust"></div>
+    <div class="easter-clouds">
+        <!-- 浮云元素 -->
+        <div class="easter-cloud" style="--i:0; --x:-60vw; --h:50px; --w:260px; --d:38s; --delay:-5s;"></div>
+        <div class="easter-cloud" style="--i:1; --x:-20vw; --h:40px; --w:180px; --d:42s; --delay:-10s;"></div>
+        <div class="easter-cloud" style="--i:2; --x:-80vw; --h:60px; --w:300px; --d:35s; --delay:-15s;"></div>
+        <div class="easter-cloud" style="--i:3; --x:-40vw; --h:45px; --w:220px; --d:45s; --delay:-20s;"></div>
+        <div class="easter-cloud" style="--i:4; --x:0vw; --h:55px; --w:280px; --d:40s; --delay:-25s;"></div>
+        <!-- 条状云背景 -->
+        <div class="easter-cloud-bg"></div>
+        <div class="easter-cloud-bg slow"></div>
+    </div>
+    <script is:inline>
+        (function() {
+            const starContainer = document.getElementById('easter-stars');
+            if (!starContainer) return;
+
+            // 星星类型: 圆形(空字符串)、十字形、菱形、正方形、闪烁
+            const starTypes = ['', 'cross', 'diamond', 'square', 'twinkle'];
+            // 星星大小范围 (像素)
+            const sizeRange = { min: 2, max: 8 };
+            // 星星数量
+            const starCount = 50;
+            // 持续时间范围 (秒)
+            const durationRange = { min: 4, max: 10 };
+            // 间隔时间 (毫秒)
+            const interval = 600;
+            // 移动速度范围 (vw/秒，即视口宽度的百分比/秒)
+            const speedRange = { min: 0.5, max: 2.5 };
+
+            function random(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            // 获取星星颜色：90%白色，10%淡黄色或青蓝色
+            function getStarColor() {
+                if (Math.random() < 0.9) {
+                    return 'white';
+                }
+                // 10%概率选择特殊颜色
+                const colors = [
+                    '#FFFACD', // 淡黄色 LemonChiffon
+                    '#F0E68C', // 淡黄 Khaki
+                    '#E0FFFF', // 淡青色 LightCyan
+                    '#B0E0E6', // 粉末蓝 PowderBlue
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            function createStar() {
+                const star = document.createElement('div');
+                const size = random(sizeRange.min, sizeRange.max);
+                const type = starTypes[Math.floor(Math.random() * starTypes.length)];
+                const duration = random(durationRange.min, durationRange.max);
+                const delay = random(0, 1.5);
+                const starColor = getStarColor();
+
+                // 初始位置 (vw/vh 单位)
+                const startX = Math.random() * 100;
+                const startY = Math.random() * 70;
+
+                // 移动方向和速度 (使用视口宽度的百分比)
+                const angle = random(0, Math.PI * 2);
+                const speed = random(speedRange.min, speedRange.max);
+                const velocityX = Math.cos(angle) * speed;
+                const velocityY = Math.sin(angle) * speed;
+
+                star.className = 'star ' + type;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = startX + 'vw';
+                star.style.top = startY + 'vh';
+                star.style.setProperty('--duration', duration + 's');
+                star.style.setProperty('--delay', delay + 's');
+
+                // 设置星星颜色
+                if (starColor !== 'white') {
+                    star.style.background = starColor;
+                    star.style.boxShadow = `0 0 6px 2px ${starColor}`;
+                }
+
+                starContainer.appendChild(star);
+
+                // 延迟后开始移动
+                const startTime = performance.now() + delay * 1000;
+                let currentX = startX;
+                let currentY = startY;
+
+                function animate(currentTime) {
+                    if (currentTime < startTime) {
+                        requestAnimationFrame(animate);
+                        return;
+                    }
+
+                    const elapsed = (currentTime - startTime) / 1000; // 秒
+                    if (elapsed >= duration) {
+                        star.remove();
+                        return;
+                    }
+
+                    // 更新位置 (使用vw/vh单位)
+                    currentX = startX + velocityX * elapsed;
+                    currentY = startY + velocityY * elapsed;
+                    star.style.left = currentX + 'vw';
+                    star.style.top = currentY + 'vh';
+
+                    requestAnimationFrame(animate);
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            // 初始生成一批星星
+            for (let i = 0; i < starCount; i++) {
+                setTimeout(createStar, Math.random() * 4000);
+            }
+
+            // 持续生成星星
+            setInterval(createStar, interval);
+        })();
+
+        // 流星效果
+        (function() {
+            const meteorContainer = document.getElementById('easter-meteors');
+            if (!meteorContainer) return;
+
+            // 流星参数范围
+            const meteorInterval = 2000; // 流星间隔时间（毫秒）
+            const speedRange = { min: 20, max: 40 }; // 速度 (vw/秒)
+            const sizeRange = { min: 2, max: 4 }; // 流星头大小
+            const trailLengthRange = { min: 40, max: 80 }; // 拖尾长度 (vw)
+            const yOffsetRange = { min: 5, max: 40 }; // y偏移范围 (vh，在屏幕上半部分)
+            const angleVariation = 2; // 角度变化范围 (±度)
+
+            function random(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            function createMeteor() {
+                const meteor = document.createElement('div');
+                const trail = document.createElement('div');
+
+                const speed = random(speedRange.min, speedRange.max);
+                const size = random(sizeRange.min, sizeRange.max);
+                const trailLength = random(trailLengthRange.min, trailLengthRange.max);
+
+                // 获取流星颜色
+                const meteorColor = getStarColor();
+                let meteorRgb, trailRgb;
+                if (meteorColor === 'white') {
+                    meteorRgb = '255, 255, 255';
+                    trailRgb = '255, 255, 255';
+                } else {
+                    // 将十六进制转换为RGB
+                    const hex = meteorColor.replace('#', '');
+                    const r = parseInt(hex.substr(0, 2), 16);
+                    const g = parseInt(hex.substr(2, 2), 16);
+                    const b = parseInt(hex.substr(4, 2), 16);
+                    meteorRgb = `${r}, ${g}, ${b}`;
+                    trailRgb = `${r}, ${g}, ${b}`;
+                }
+
+                // 初始位置：x从屏幕左侧外开始，y在屏幕上半部分
+                const startY = random(yOffsetRange.min, yOffsetRange.max);
+                const startX = -15; // 从左侧外开始
+
+                // 移动方向：从左上到右下，添加随机角度偏移
+                const baseAngle = Math.atan2(100 - startY, 120); // 基础角度
+                const angleOffset = random(-angleVariation, angleVariation) * Math.PI / 180; // ±2度转换为弧度
+                const angle = baseAngle + angleOffset;
+                const velocityX = Math.cos(angle) * speed;
+                const velocityY = Math.sin(angle) * speed;
+
+                // 计算飞行持续时间（从起点到屏幕外）
+                const duration = (130 - startX) / velocityX;
+
+                // 流星头
+                meteor.className = 'meteor';
+                meteor.style.width = size + 'px';
+                meteor.style.height = size + 'px';
+                meteor.style.left = startX + 'vw';
+                meteor.style.top = startY + 'vh';
+                meteor.style.boxShadow = `0 0 ${size * 2}px ${size * 0.5}px rgba(${meteorRgb}, 0.8)`;
+                meteor.style.animationDuration = duration + 's';
+
+                // 拖尾 - 使用CSS transform放在流星反方向
+                trail.className = 'meteor-trail';
+                trail.style.width = trailLength + 'px';
+                trail.style.height = (size * 0.6) + 'px';
+                // 拖尾的起点是流星的反方向（angle + 180度）
+                trail.style.left = startX + 'vw';
+                trail.style.top = startY + 'vh';
+                trail.style.transformOrigin = 'right center';
+                trail.style.transform = `rotate(${angle + Math.PI}rad)`;
+                trail.style.background = `linear-gradient(to left, rgba(${trailRgb},0), rgba(${trailRgb},0.9))`;
+                trail.style.animationDuration = duration + 's';
+
+                meteorContainer.appendChild(trail);
+                meteorContainer.appendChild(meteor);
+
+                const startTime = performance.now();
+                let currentX = startX;
+                let currentY = startY;
+
+                function animate(currentTime) {
+                    const elapsed = (currentTime - startTime) / 1000;
+
+                    // 计算当前位置
+                    currentX = startX + velocityX * elapsed;
+                    currentY = startY + velocityY * elapsed;
+
+                    // 检查是否超出屏幕范围
+                    if (currentX > 120 || currentY > 120) {
+                        meteor.remove();
+                        trail.remove();
+                        return;
+                    }
+
+                    // 更新流星头位置
+                    meteor.style.left = currentX + 'vw';
+                    meteor.style.top = currentY + 'vh';
+
+                    // 拖尾位置：流星位置减去拖尾长度（在反方向上）
+                    const trailOffsetX = Math.cos(angle + Math.PI) * trailLength;
+                    const trailOffsetY = Math.sin(angle + Math.PI) * trailLength;
+                    trail.style.left = (currentX + trailOffsetX) + 'vw';
+                    trail.style.top = (currentY + trailOffsetY) + 'vh';
+
+                    requestAnimationFrame(animate);
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            // 随机延迟后开始生成流星
+            setTimeout(function() {
+                createMeteor();
+                // 持续生成流星
+                setInterval(createMeteor, meteorInterval);
+            }, random(1000, 5000));
+        })();
+
+        // 彗星效果
+        (function() {
+            const cometContainer = document.getElementById('easter-comets');
+            if (!cometContainer) return;
+
+            const cometInterval = 15000; // 彗星间隔时间（毫秒）
+            const speedRange = { min: 3, max: 6 }; // 速度 (vw/秒)
+            const headSizeRange = { min: 3, max: 5 }; // 彗星头大小
+            const tailLengthRange = { min: 25, max: 40 }; // 尾巴长度 (vw)
+            const yStartRange = { min: 5, max: 30 }; // 起始y范围
+
+            function random(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            function createComet() {
+                const comet = document.createElement('div');
+                const head = document.createElement('div');
+                const tail = document.createElement('div');
+
+                const speed = random(speedRange.min, speedRange.max);
+                const headSize = random(headSizeRange.min, headSizeRange.max);
+                const tailLength = random(tailLengthRange.min, tailLengthRange.max);
+
+                // 获取彗星颜色
+                const cometColor = getStarColor();
+                let cometRgb;
+                if (cometColor === 'white') {
+                    cometRgb = '255, 255, 255';
+                } else {
+                    const hex = cometColor.replace('#', '');
+                    const r = parseInt(hex.substr(0, 2), 16);
+                    const g = parseInt(hex.substr(2, 2), 16);
+                    const b = parseInt(hex.substr(4, 2), 16);
+                    cometRgb = `${r}, ${g}, ${b}`;
+                }
+
+                const startY = random(yStartRange.min, yStartRange.max);
+                const startX = -20;
+
+                // 角度：约45度，从左上到右下划过
+                const baseAngle = 45 * Math.PI / 180; // 基础角度45度
+                const angleOffset = random(-10, 10) * Math.PI / 180; // ±10度变化
+                const angle = baseAngle + angleOffset;
+
+                const velocityX = Math.cos(angle) * speed;
+                const velocityY = Math.sin(angle) * speed;
+
+                const duration = (140 - startX) / velocityX;
+
+                comet.className = 'comet';
+                comet.style.opacity = '0';
+
+                head.className = 'comet-head';
+                head.style.width = headSize + 'px';
+                head.style.height = headSize + 'px';
+                head.style.boxShadow = `0 0 ${headSize * 3}px ${headSize}px rgba(${cometRgb}, 0.9)`;
+                head.style.animation = `cometFadeInOut ${duration}s linear forwards`;
+
+                tail.className = 'comet-tail';
+                tail.style.width = tailLength + 'vw';
+                tail.style.height = (headSize * 0.4) + 'px';
+                tail.style.transform = `rotate(${angle}rad)`;
+                tail.style.background = `linear-gradient(to right, rgba(${cometRgb}, 0.9), rgba(${cometRgb}, 0.4), transparent)`;
+                tail.style.animation = `cometFadeInOut ${duration}s linear forwards`;
+
+                comet.appendChild(tail);
+                comet.appendChild(head);
+                cometContainer.appendChild(comet);
+
+                let currentX = startX;
+                let currentY = startY;
+                const startTime = performance.now();
+
+                function animate(currentTime) {
+                    const elapsed = (currentTime - startTime) / 1000;
+                    currentX = startX + velocityX * elapsed;
+                    currentY = startY + velocityY * elapsed;
+
+                    if (currentX > 130 || currentY > 130) {
+                        comet.remove();
+                        return;
+                    }
+
+                    comet.style.left = currentX + 'vw';
+                    comet.style.top = currentY + 'vh';
+                    comet.style.opacity = '1';
+
+                    requestAnimationFrame(animate);
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            setTimeout(function() {
+                createComet();
+                setInterval(createComet, cometInterval);
+            }, random(2000, 8000));
+        })();
+
+        // 流星余迹效果
+        (function() {
+            const meteorContainer = document.getElementById('easter-meteors');
+            if (!meteorContainer) return;
+
+            const originalCreateMeteor = window.createMeteorWrapper;
+
+            // 拦截流星创建，在流星消失时创建余迹
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.nodeType === 1 && node.classList && node.classList.contains('meteor')) {
+                            const meteor = node;
+                            const meteorTop = meteor.style.top;
+                            const meteorLeft = meteor.style.left;
+
+                            // 监听流星消失
+                            setTimeout(function() {
+                                if (meteor.parentNode) {
+                                    const afterglow = document.createElement('div');
+                                    afterglow.className = 'meteor-afterglow';
+                                    afterglow.style.left = meteorLeft;
+                                    afterglow.style.top = meteorTop;
+                                    afterglow.style.width = '8px';
+                                    afterglow.style.height = '8px';
+                                    meteorContainer.appendChild(afterglow);
+
+                                    setTimeout(function() {
+                                        afterglow.remove();
+                                    }, 1500);
+                                }
+                            }, 2800); // 在流星消失前创建余迹
+                        }
+                    });
+                });
+            });
+
+            observer.observe(meteorContainer, { childList: true });
+        })();
+
+        // 鼠标跟随星尘效果
+        (function() {
+            const cursorDustContainer = document.getElementById('easter-cursor-dust');
+            if (!cursorDustContainer) return;
+
+            let lastX = 0;
+            let lastY = 0;
+            let isMoving = false;
+            let moveTimeout;
+
+            function createDust(x, y) {
+                const dust = document.createElement('div');
+                const size = Math.random() * 4 + 2;
+                dust.className = 'cursor-dust';
+                dust.style.width = size + 'px';
+                dust.style.height = size + 'px';
+                dust.style.left = (x - size / 2) + 'px';
+                dust.style.top = (y - size / 2) + 'px';
+                cursorDustContainer.appendChild(dust);
+
+                setTimeout(function() {
+                    dust.remove();
+                }, 800);
+            }
+
+            document.addEventListener('mousemove', function(e) {
+                const x = e.clientX;
+                const y = e.clientY;
+
+                if (!isMoving) {
+                    isMoving = true;
+                    createDust(x, y);
+                }
+
+                clearTimeout(moveTimeout);
+                moveTimeout = setTimeout(function() {
+                    isMoving = false;
+                }, 100);
+
+                // 限制产生频率
+                if (Math.abs(x - lastX) > 15 || Math.abs(y - lastY) > 15) {
+                    createDust(x, y);
+                    lastX = x;
+                    lastY = y;
+                }
+            });
+        })();
+    </script>
+)}
 
 <!-- Navbar -->
 <slot slot="head" name="head"></slot>

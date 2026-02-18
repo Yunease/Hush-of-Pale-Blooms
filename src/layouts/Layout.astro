@@ -128,6 +128,14 @@ const bannerOffset =
 					}
 			}
 
+			// 强制暗色模式
+			document.documentElement.classList.add('dark');
+
+			// 检查是否需要启用 easter 主题（通过 sessionStorage 传递）
+			if (sessionStorage.getItem('easter') === 'true') {
+				document.documentElement.classList.add('easter');
+			}
+
 			// Load the hue from local storage
 			const hue = localStorage.getItem('hue') || configHue;
 			document.documentElement.style.setProperty('--hue', hue);

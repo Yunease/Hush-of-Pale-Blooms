@@ -1,23 +1,61 @@
 ---
 import type { GetStaticPaths } from "astro";
 import Pagination from "../components/control/Pagination.astro";
-import PostPage from "../components/PostPage.astro";
 import { PAGE_SIZE } from "../constants/constants";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
 import { getSortedPosts } from "../utils/content-utils";
+import { formatDate, formatTime } from "../utils/date-utils";
 
 export const getStaticPaths = (async ({ paginate }) => {
-	const allBlogPosts = await getSortedPosts();
-	return paginate(allBlogPosts, { pageSize: PAGE_SIZE });
+    const allBlogPosts = await getSortedPosts();
+
+    // 过滤包含 "rant" 标签的文章
+    const rantPosts = allBlogPosts.filter((post) => post.data.tags.includes("rant"));
+
+    // 按发布日期排序 (最新优先)
+    rantPosts.sort(
+        (a, b) =>
+            new Date(b.data.published).getTime() - new Date(a.data.published).getTime(),
+    );
+
+    // 每页显示 15 篇文章
+    return paginate(rantPosts, { pageSize: 15 });
 }) satisfies GetStaticPaths;
-// https://github.com/withastro/astro/issues/6507#issuecomment-1489916992
 
 const { page } = Astro.props;
 
 const len = page.data.length;
 ---
 
-<MainGridLayout>
-    <PostPage page={page}></PostPage>
-    <Pagination class="mx-auto onload-animation" page={page} style={`animation-delay: calc(var(--content-delay) + ${(len)*50}ms)`}></Pagination>
+<MainGridLayout easter={true}>
+    <div class="flex flex-col">
+        <!-- 标题卡片 -->
+        <div class="easter-box p-6 mb-8 onload-animation">
+            <h1 class="text-3xl font-bold text-white mb-3">吐槽</h1>
+            <p class="text-white/80 leading-relaxed">日常吐槽 · 碎碎念</p>
+        </div>
+
+        <!-- 文章列表 -->
+        <div class="flex flex-col rounded-[var(--radius-large)] gap-4 mb-4">
+            {page.data.map((post: any) => (
+                <div class="easter-card onload-animation">
+                    <!-- 时间线 -->
+                    <div class="flex flex-col items-center min-w-[4.5rem]">
+                        <div class="w-3 h-3 rounded-full bg-white/80 relative z-10"></div>
+                        <div class="text-xs font-medium text-white/80">{formatDate(new Date(post.data.published))}</div>
+                        <div class="text-xs font-light text-white/50">{formatTime(new Date(post.data.published))}</div>
+                    </div>
+                    <!-- 内容 -->
+                    <div class="flex-1 rounded-[var(--radius-large)] p-4">
+                        <div class="text-white/90 leading-relaxed whitespace-pre-wrap">
+                            {post.body}
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        <!-- 分页 -->
+        <Pagination class="mx-auto onload-animation" page={page} style={`animation-delay: calc(var(--content-delay) + ${(len)*50}ms)`}></Pagination>
+    </div>
 </MainGridLayout>
