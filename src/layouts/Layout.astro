@@ -132,12 +132,12 @@ const bannerOffset =
 			document.documentElement.classList.add('dark');
 
 			// 检查是否需要启用 easter 主题（通过 sessionStorage 传递）
-			if (sessionStorage.getItem('easter') === 'true') {
+			if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('easter') === 'true') {
 				document.documentElement.classList.add('easter');
 			}
 
 			// Load the hue from local storage
-			const hue = localStorage.getItem('hue') || configHue;
+			const hue = typeof localStorage !== 'undefined' ? localStorage.getItem('hue') : configHue;
 			document.documentElement.style.setProperty('--hue', hue);
 
 			// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text

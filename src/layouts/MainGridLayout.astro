@@ -45,9 +45,9 @@ const mainPanelTop = siteConfig.banner.enable
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle}>
 {easter ? (
-    <script is:inline>sessionStorage.setItem('easter', 'true');</script>
+    <script is:inline>if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('easter', 'true');</script>
 ) : (
-    <script is:inline>sessionStorage.removeItem('easter');</script>
+    <script is:inline>if (typeof sessionStorage !== 'undefined') sessionStorage.removeItem('easter');</script>
 )}
 
 <!-- Easter Background -->
@@ -76,6 +76,10 @@ const mainPanelTop = siteConfig.banner.enable
     </div>
     <script is:inline>
         (function() {
+            // 防止重复初始化
+            if (window.easterStarsInitialized) return;
+            window.easterStarsInitialized = true;
+
             const starContainer = document.getElementById('easter-stars');
             if (!starContainer) return;
 
@@ -234,6 +238,9 @@ const mainPanelTop = siteConfig.banner.enable
 
         // 流星效果
         (function() {
+            if (window.easterMeteorsInitialized) return;
+            window.easterMeteorsInitialized = true;
+
             const meteorContainer = document.getElementById('easter-meteors');
             if (!meteorContainer) return;
 
@@ -366,6 +373,9 @@ const mainPanelTop = siteConfig.banner.enable
 
         // 彗星效果
         (function() {
+            if (window.easterCometsInitialized) return;
+            window.easterCometsInitialized = true;
+
             const cometContainer = document.getElementById('easter-comets');
             if (!cometContainer) return;
 
