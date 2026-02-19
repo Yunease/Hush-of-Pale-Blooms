@@ -65,7 +65,8 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 export const signatureConfig: SignatureConfig = {
 	enable: true,
 	lines: [
+		"这里是被遗忘的花地，连时间都成灰了，来到这里，你又在寻找什么呢？",
 		"—— 薇尔斯缇娅",
-		"2026.02.19",
+		"7096.15.03",
 	],
 };

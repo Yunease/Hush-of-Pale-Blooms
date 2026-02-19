@@ -1,9 +1,17 @@
-# About
-This is the demo site for [Fuwari](https://github.com/saicaca/fuwari).
+# 关于
 
-::github{repo="saicaca/fuwari"}
+这里是「苍白花院」。
 
-> ### Sources of images used in this site
-> - [Unsplash](https://unsplash.com/)
-> - [星と少女](https://www.pixiv.net/artworks/108916539) by [Stella](https://www.pixiv.net/users/93273965)
-> - [Rabbit - v1.4 Showcase](https://civitai.com/posts/586908) by [Rabbit_YourMajesty](https://civitai.com/user/Rabbit_YourMajesty)
+灼原之上，苍白花开。
+
+---
+
+这里是被遗忘的花地，连时间都成灰了。记录一些日常的碎碎念，一些无法言说的情绪，还有一些在这个数字世界里漂泊的痕迹。
+
+如果你偶然来到这儿，说明我们在某个频率上产生了共振——哪怕只是一瞬间。
+
+---
+
+*感谢你的访问。*
+
+—— 薇尔斯缇娅
