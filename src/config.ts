@@ -40,7 +40,11 @@ export const siteConfig: SiteConfig = {
 };
 
 export const navBarConfig: NavBarConfig = {
-	links: [LinkPreset.Home, LinkPreset.Archive, LinkPreset.About],
+	links: [LinkPreset.Home, LinkPreset.Archive, LinkPreset.About, {
+		name: "让我们快点逃回去吧！",
+		url: "https://vilstia.pages.dev/",
+		external: false,
+	}],
 };
 
 export const profileConfig: ProfileConfig = {

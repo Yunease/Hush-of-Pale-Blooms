@@ -9,17 +9,17 @@ import { formatDate, formatTime } from "../utils/date-utils";
 export const getStaticPaths = (async ({ paginate }) => {
     const allBlogPosts = await getSortedPosts();
 
-    // 过滤包含 "rant" 标签的文章
-    const rantPosts = allBlogPosts.filter((post) => post.data.tags.includes("rant"));
+    // 过滤包含 "vilstia" 标签的文章
+    const vilstiaPosts = allBlogPosts.filter((post) => post.data.tags.includes("vilstia"));
 
     // 按发布日期排序 (最新优先)
-    rantPosts.sort(
+    vilstiaPosts.sort(
         (a, b) =>
             new Date(b.data.published).getTime() - new Date(a.data.published).getTime(),
     );
 
     // 每页显示 15 篇文章
-    return paginate(rantPosts, { pageSize: 8 });
+    return paginate(vilstiaPosts, { pageSize: 8 });
 }) satisfies GetStaticPaths;
 
 const { page } = Astro.props;
