@@ -286,8 +286,8 @@ setClickOutsideToClose("search-panel", ["search-panel", "search-bar", "search-sw
 
 
 function loadTheme() {
-	const theme = getStoredTheme()
-	setTheme(theme)
+	// 强制暗色模式，忽略用户的主题设置
+	setTheme(DARK_MODE)
 }
 
 function loadHue() {
