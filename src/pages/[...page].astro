@@ -4,7 +4,7 @@ import Pagination from "../components/control/Pagination.astro";
 import { PAGE_SIZE } from "../constants/constants";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
 import { getSortedPosts } from "../utils/content-utils";
-import { formatDate, formatTime } from "../utils/date-utils";
+import { formatDate, formatYearMonth } from "../utils/date-utils";
 
 export const getStaticPaths = (async ({ paginate }) => {
     const allBlogPosts = await getSortedPosts();
@@ -58,7 +58,7 @@ const len = page.data.length;
                     <!-- 时间线 -->
                     <div class="flex flex-col items-center min-w-[5rem] pr-4 border-r border-white/10">
                         <div class="text-xs font-medium text-white/90">{formatDate(new Date(post.data.published))}</div>
-                        <div class="text-xs font-light text-white/50 mt-1">{formatTime(new Date(post.data.published))}</div>
+                        <div class="text-xs font-light text-white/50 mt-1">{formatYearMonth(new Date(post.data.published))}</div>
                     </div>
                     <!-- 内容 -->
                     <div class="flex-1 p-2">
