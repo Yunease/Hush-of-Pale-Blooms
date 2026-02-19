@@ -213,6 +213,225 @@ html.is-animating .transition-swup-fade {
     background: var(--easter-card-bg-hover, rgba(100, 20, 120, 0.35));
 }
 
+/* 标题盒子样式 - 流动星云 + 星光闪烁 + 深邃渐变 + 极光波动 + 鼠标光晕 */
+.title-box {
+    background: linear-gradient(180deg, rgba(1, 7, 36, 0.6) 0%, rgba(10, 15, 46, 0.8) 50%, rgba(1, 7, 36, 0.6) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: var(--radius-large);
+    transition: all 0.5s ease;
+}
+
+.title-box:hover {
+    border-color: rgba(148, 163, 184, 0.25);
+}
+
+/* 标题文字样式：渐变 + 发光 + 闪烁 */
+.title-text {
+    background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 30%, #c4b5fd 60%, #ffffff 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    filter: drop-shadow(0 0 8px rgba(196, 181, 253, 0.5));
+    animation: titleGlow 3s ease-in-out infinite, titleGradientShift 5s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 8px rgba(196, 181, 253, 0.5));
+    }
+    50% {
+        filter: drop-shadow(0 0 15px rgba(196, 181, 253, 0.8));
+    }
+}
+
+@keyframes titleGradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 副标题文字样式：淡化 + 呼吸 + 斜体 + 英文装饰 */
+.subtitle-text {
+    font-style: italic;
+    animation: subtitleBreath 4s ease-in-out infinite;
+}
+
+.subtitle-cn {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.subtitle-divider {
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0 0.5em;
+}
+
+.subtitle-en {
+    font-size: 0.75em;
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: 'Times New Roman', serif;
+    font-style: normal;
+}
+
+@keyframes subtitleBreath {
+    0%, 100% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 0.9;
+    }
+}
+
+/* 背景层 - 深邃渐变 */
+.title-box-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(88, 28, 135, 0.4) 0%,
+        rgba(30, 64, 175, 0.3) 30%,
+        rgba(1, 7, 36, 0.5) 60%,
+        rgba(134, 25, 143, 0.3) 100%
+    );
+    z-index: 0;
+}
+
+/* 流动星云 */
+.title-box-nebula {
+    position: absolute;
+    inset: 0;
+    opacity: 0.7;
+    z-index: 1;
+    background:
+        radial-gradient(ellipse at 20% 30%, rgba(139, 92, 246, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(59, 130, 246, 0.35) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(168, 85, 247, 0.3) 0%, transparent 60%);
+    animation: titleNebulaFloat 20s ease-in-out infinite;
+}
+
+@keyframes titleNebulaFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(10px, -5px) scale(1.02); }
+    66% { transform: translate(-8px, 8px) scale(0.98); }
+}
+
+/* 星光闪烁 */
+.title-box-stars {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.title-box-stars::before,
+.title-box-stars::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    box-shadow:
+        10% 15% 0 0 rgba(255, 255, 255, 0.6),
+        25% 60% 0 0 rgba(255, 255, 255, 0.4),
+        45% 25% 0 0 rgba(255, 255, 255, 0.5),
+        70% 80% 0 0 rgba(255, 255, 255, 0.3),
+        85% 40% 0 0 rgba(255, 255, 255, 0.5),
+        60% 10% 0 0 rgba(255, 255, 255, 0.4),
+        30% 85% 0 0 rgba(255, 255, 255, 0.3);
+    animation: titleStarTwinkle 4s ease-in-out infinite;
+}
+
+.title-box-stars::after {
+    width: 1px;
+    height: 1px;
+    top: 40%;
+    left: 20%;
+    box-shadow:
+        55% 30% 0 0 rgba(255, 255, 255, 0.5),
+        20% 75% 0 0 rgba(255, 255, 255, 0.3),
+        75% 55% 0 0 rgba(255, 255, 255, 0.4),
+        40% 50% 0 0 rgba(255, 255, 255, 0.5),
+        90% 20% 0 0 rgba(255, 255, 255, 0.3);
+    animation: titleStarTwinkle 3s ease-in-out infinite 1s;
+}
+
+@keyframes titleStarTwinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.9; }
+}
+
+/* 偶尔的流星 */
+.title-box-stars::before {
+    animation:
+        titleStarTwinkle 4s ease-in-out infinite,
+        titleShootingStar 8s ease-in-out infinite 2s;
+}
+
+@keyframes titleShootingStar {
+    0% {
+        transform: translate(-50px, -50px) rotate(45deg);
+        opacity: 0;
+    }
+    2% {
+        opacity: 1;
+    }
+    5% {
+        transform: translate(100px, 100px) rotate(45deg);
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* 极光波动 */
+.title-box-aurora {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    opacity: 0.4;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(34, 211, 238, 0.25) 25%,
+        rgba(168, 85, 247, 0.25) 50%,
+        rgba(34, 211, 238, 0.25) 75%,
+        transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: titleAuroraWave 15s ease-in-out infinite;
+    mix-blend-mode: screen;
+}
+
+@keyframes titleAuroraWave {
+    0% { background-position: 200% 0; }
+    50% { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* 鼠标光晕 */
+.title-box-glow {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, transparent 70%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 3;
+    transform: translate(-50%, -50%);
+}
+
+.title-box:hover .title-box-glow {
+    opacity: 1;
+}
+
 /* Rant文章卡片样式 */
 .rant-card {
     display: flex;

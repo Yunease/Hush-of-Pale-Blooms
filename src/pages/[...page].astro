@@ -30,9 +30,25 @@ const len = page.data.length;
 <MainGridLayout easter={true}>
     <div class="flex flex-col">
         <!-- 标题卡片 -->
-        <div class="easter-box p-6 mb-8 onload-animation">
-            <h1 class="text-3xl font-bold text-white mb-3">吐槽</h1>
-            <p class="text-white/80 leading-relaxed">日常吐槽 · 碎碎念</p>
+        <div class="title-box p-6 mb-8 onload-animation relative overflow-hidden" id="title-box">
+            <!-- 背景层 -->
+            <div class="title-box-bg"></div>
+            <div class="title-box-nebula"></div>
+            <div class="title-box-stars"></div>
+            <div class="title-box-aurora"></div>
+            <!-- 内容层 -->
+            <div class="relative z-10">
+                <!-- 标题：渐变 + 发光 + 闪烁 -->
+                <h1 class="title-text text-3xl font-bold mb-3">吐槽</h1>
+                <!-- 副标题：淡化 + 呼吸 + 斜体 + 英文装饰 -->
+                <p class="subtitle-text text-white/70 leading-relaxed">
+                    <span class="subtitle-cn">日常吐槽</span>
+                    <span class="subtitle-divider"> · </span>
+                    <span class="subtitle-en">Whispers in the Void</span>
+                </p>
+            </div>
+            <!-- 鼠标光晕 -->
+            <div class="title-box-glow"></div>
         </div>
 
         <!-- 文章列表 -->
@@ -57,4 +73,25 @@ const len = page.data.length;
         <!-- 分页 -->
         <Pagination class="mx-auto onload-animation" page={page} style={`animation-delay: calc(var(--content-delay) + ${(len)*50}ms)`}></Pagination>
     </div>
+
+    <script is:inline>
+        (function() {
+            var titleBox = document.getElementById('title-box');
+            var glow = titleBox ? titleBox.querySelector('.title-box-glow') : null;
+
+            if (!titleBox || !glow) return;
+
+            titleBox.addEventListener('mousemove', function(e) {
+                var rect = titleBox.getBoundingClientRect();
+                var x = e.clientX - rect.left;
+                var y = e.clientY - rect.top;
+                glow.style.left = x + 'px';
+                glow.style.top = y + 'px';
+            });
+
+            titleBox.addEventListener('mouseleave', function() {
+                glow.style.opacity = '0';
+            });
+        })();
+    </script>
 </MainGridLayout>
