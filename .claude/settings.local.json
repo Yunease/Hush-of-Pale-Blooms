@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add src/components/Navbar.astro src/config.ts src/layouts/Layout.astro src/layouts/MainGridLayout.astro src/pages/[...page].astro src/pages/posts/[...slug].astro src/styles/transition.css src/styles/variables.styl src/utils/date-utils.ts)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(npm run dev)",
+      "Bash(git add:*)"
+    ]
+  }
+}

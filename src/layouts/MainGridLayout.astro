@@ -111,6 +111,22 @@ const mainPanelTop = siteConfig.banner.enable
                 return colors[Math.floor(Math.random() * colors.length)];
             }
 
+            // 鼠标位置跟踪
+            let mouseX = -1000;
+            let mouseY = -1000;
+            const attractRadius = 15; // 吸附半径（vw）
+            const attractStrength = 0.08; // 吸附强度
+
+            document.addEventListener('mousemove', function(e) {
+                mouseX = (e.clientX / window.innerWidth) * 100;
+                mouseY = (e.clientY / window.innerHeight) * 100;
+            });
+
+            document.addEventListener('mouseleave', function() {
+                mouseX = -1000;
+                mouseY = -1000;
+            });
+
             function createStar() {
                 const star = document.createElement('div');
                 const size = random(sizeRange.min, sizeRange.max);
@@ -149,6 +165,8 @@ const mainPanelTop = siteConfig.banner.enable
                 const startTime = performance.now() + delay * 1000;
                 let currentX = startX;
                 let currentY = startY;
+                let currentVelX = velocityX;
+                let currentVelY = velocityY;
 
                 function animate(currentTime) {
                     if (currentTime < startTime) {
@@ -162,9 +180,40 @@ const mainPanelTop = siteConfig.banner.enable
                         return;
                     }
 
+                    // 计算与鼠标的距离
+                    const dx = mouseX - currentX;
+                    const dy = mouseY - currentY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    // 如果在吸附半径内，向鼠标移动
+                    if (distance < attractRadius && distance > 0.5) {
+                        // 逐渐转向鼠标方向
+                        currentVelX += dx * attractStrength * 0.1;
+                        currentVelY += dy * attractStrength * 0.1;
+
+                        // 限制最大速度
+                        const maxSpeed = speed * 2;
+                        const currentSpeed = Math.sqrt(currentVelX * currentVelX + currentVelY * currentVelY);
+                        if (currentSpeed > maxSpeed) {
+                            currentVelX = (currentVelX / currentSpeed) * maxSpeed;
+                            currentVelY = (currentVelY / currentSpeed) * maxSpeed;
+                        }
+                    }
+
                     // 更新位置 (使用vw/vh单位)
-                    currentX = startX + velocityX * elapsed;
-                    currentY = startY + velocityY * elapsed;
+                    currentX += currentVelX * 0.016; // 假设60fps，每帧移动
+                    currentY += currentVelY * 0.016;
+
+                    // 边界检查，碰到边界反弹
+                    if (currentX < 0 || currentX > 100) {
+                        currentVelX *= -0.8;
+                        currentX = Math.max(0, Math.min(100, currentX));
+                    }
+                    if (currentY < 0 || currentY > 100) {
+                        currentVelY *= -0.8;
+                        currentY = Math.max(0, Math.min(100, currentY));
+                    }
+
                     star.style.left = currentX + 'vw';
                     star.style.top = currentY + 'vh';
 
@@ -198,6 +247,17 @@ const mainPanelTop = siteConfig.banner.enable
 
             function random(min, max) {
                 return Math.random() * (max - min) + min;
+            }
+
+            // 获取星星颜色：90%白色，10%淡黄色或青蓝色
+            function getStarColor() {
+                if (Math.random() < 0.9) {
+                    return 'white';
+                }
+                const colors = [
+                    '#FFFACD', '#F0E68C', '#E0FFFF', '#B0E0E6',
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
             }
 
             function createMeteor() {
@@ -319,6 +379,17 @@ const mainPanelTop = siteConfig.banner.enable
                 return Math.random() * (max - min) + min;
             }
 
+            // 获取星星颜色：90%白色，10%淡黄色或青蓝色
+            function getStarColor() {
+                if (Math.random() < 0.9) {
+                    return 'white';
+                }
+                const colors = [
+                    '#FFFACD', '#F0E68C', '#E0FFFF', '#B0E0E6',
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
             function createComet() {
                 const comet = document.createElement('div');
                 const head = document.createElement('div');
@@ -366,7 +437,8 @@ const mainPanelTop = siteConfig.banner.enable
                 tail.className = 'comet-tail';
                 tail.style.width = tailLength + 'vw';
                 tail.style.height = (headSize * 0.4) + 'px';
-                tail.style.transform = `rotate(${angle}rad)`;
+                // 尾巴方向与飞行方向相反
+                tail.style.transform = `rotate(${angle + Math.PI}rad)`;
                 tail.style.background = `linear-gradient(to right, rgba(${cometRgb}, 0.9), rgba(${cometRgb}, 0.4), transparent)`;
                 tail.style.animation = `cometFadeInOut ${duration}s linear forwards`;
 
