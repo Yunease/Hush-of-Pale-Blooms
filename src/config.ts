@@ -61,3 +61,11 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 	// Please select a dark theme, as this blog theme currently only supports dark background color
 	theme: "github-dark",
 };
+
+export const signatureConfig: SignatureConfig = {
+	enable: true,
+	lines: [
+		"—— 薇尔斯缇娅",
+		"2026.02.19",
+	],
+};

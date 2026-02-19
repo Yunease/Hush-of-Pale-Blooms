@@ -1,0 +1,18 @@
+---
+import { signatureConfig } from "../../config";
+
+const config = signatureConfig;
+
+if (!config.enable) {
+    return;
+}
+---
+<div class="card-base p-4">
+    <div class="flex flex-col gap-1 text-center">
+        {config.lines.map((line) => (
+            <div class="text-sm text-white/70 font-light tracking-wider">
+                {line}
+            </div>
+        ))}
+    </div>
+</div>

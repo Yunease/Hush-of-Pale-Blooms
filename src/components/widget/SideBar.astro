@@ -1,8 +1,9 @@
 ---
 import type { MarkdownHeading } from "astro";
-import Categories from "./Categories.astro";
+// import Categories from "./Categories.astro";
 import Profile from "./Profile.astro";
-import Tag from "./Tags.astro";
+import Signature from "./Signature.astro";
+// import Tag from "./Tags.astro";
 
 interface Props {
 	class?: string;
@@ -14,9 +15,14 @@ const className = Astro.props.class;
 <div id="sidebar" class:list={[className, "w-full"]}>
     <div class="flex flex-col w-full gap-4 mb-4">
         <Profile></Profile>
+        <Signature></Signature>
     </div>
     <div id="sidebar-sticky" class="transition-all duration-700 flex flex-col w-full gap-4 top-4 sticky top-4">
+        <!-- 分类板块（暂时禁用）
         <Categories class="onload-animation" style="animation-delay: 150ms"></Categories>
+        -->
+        <!-- 标签板块（暂时禁用）
         <Tag class="onload-animation" style="animation-delay: 200ms"></Tag>
+        -->
     </div>
 </div>
